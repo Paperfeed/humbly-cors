@@ -10,7 +10,8 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "bent": "^7.3.9"
   },
   "engines": {
     "node": "12.x"
