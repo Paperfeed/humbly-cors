@@ -6,6 +6,8 @@ dotenv.config()
 import bodyParser from 'body-parser'
 import { createProxyMiddleware } from 'http-proxy-middleware'
 
+import { isDev } from './utils'
+
 const app = express()
 
 app.use(
@@ -42,5 +44,9 @@ app.use(bodyParser.json())
 const port = 3000
 
 app.listen(port, () => {
-  console.log(`Server started at http://localhost:${port}`)
+  console.log(
+    isDev()
+      ? `Server started at http://localhost:${port}`
+      : `Server started at https://humbly-cors.glitch.me`,
+  )
 })
