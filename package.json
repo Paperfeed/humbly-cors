@@ -5,7 +5,7 @@
   "main": "src/server.ts",
   "scripts": {
     "start": "ts-node src/server.ts",
-    "dev": "ts-node-dev src/server.ts"
+    "dev": "cross-env NODE_ENV=development && ts-node-dev src/server.ts"
   },
   "dependencies": {
     "body-parser": "^1.19.0",
@@ -16,6 +16,7 @@
     "ts-node-dev": "^1.0.0-pre.59"
   },
   "devDependencies": {
+    "cross-env": "^7.0.2",
     "@types/body-parser": "^1.19.0",
     "@types/express": "^4.17.7",
     "@types/http-proxy-middleware": "^0.19.3",
@@ -37,7 +38,7 @@
     "pnpm": "5.5.2"
   },
   "repository": {
-    "url": "https://glitch.com/edit/#!/hello-express"
+    "url": "https://github.com/Paperfeed/humbly-cors"
   },
   "license": "MIT",
   "keywords": [

@@ -1,39 +1,26 @@
+import { Express } from 'express'
 import { createProxyMiddleware } from 'http-proxy-middleware'
 
-export function useProxyMiddleware(app: any) {
+import { isDev } from './utils'
+
+export function useProxyMiddleware(app: Express) {
   app.use(
     createProxyMiddleware('/', {
       changeOrigin: true,
-      cookieDomainRewrite: 'localhost',
+      cookieDomainRewrite: isDev() ? 'localhost' : 'humbly-cors.glitch.me',
       headers: {
-        host: 'www.speedtest.net',
+        host: 'api-v3.igdb.com',
         origin: null,
         'user-key': process.env.IGDB_API_KEY,
       },
       logLevel: 'debug',
-      onProxyReq: function (proxyReq: any, req: any, res: any) {
+      onProxyReq: function (proxyReq, req, res) {
         console.log(proxyReq, req, res)
         proxyReq.setHeader('accept-encoding', 'application/json')
-        proxyReq.setHeader('user-key', 'identity')
+        proxyReq.setHeader('user-key', process.env.IGDB_API_KEY)
       },
       secure: false,
-      target: 'www.speedtest.net',
+      target: 'api-v3.igdb.com',
     }),
   )
-
-  // app.use(
-  //   proxy('/*.html', {
-  //     changeOrigin: true,
-  //     secure: false,
-  //     target: 'https://secure.gooddata.com',
-  //   }),
-  // )
-  //
-  // app.use(
-  //   proxy('/packages/*.{js,css}', {
-  //     changeOrigin: true,
-  //     secure: false,
-  //     target: 'https://secure.gooddata.com',
-  //   }),
-  // )
 }
