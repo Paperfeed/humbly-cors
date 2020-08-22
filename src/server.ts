@@ -3,12 +3,20 @@ import express from 'express'
 
 dotenv.config()
 
+import bodyParser from 'body-parser'
 import { createProxyMiddleware } from 'http-proxy-middleware'
 
 const app = express()
 
 app.use(
   '/',
+  function (req, res, next) {
+    if (req.headers['appid'] !== process.env.APP_ID) {
+      res.status(401).send('Unauthorized')
+    } else {
+      next()
+    }
+  },
   createProxyMiddleware({
     changeOrigin: true,
     headers: {
@@ -17,17 +25,19 @@ app.use(
       'user-key': process.env.IGDB_API_KEY,
     },
     logLevel: 'debug',
-    onProxyReq(proxyReq, req, res) {
-      console.log('[Received Request]', res)
+    onProxyReq(proxyReq, req /*, res*/) {
+      if (req.body instanceof Object) {
+        proxyReq.write(JSON.stringify(req.body))
+      }
     },
-    onProxyRes(proxyRes, req, res) {
-      console.log(req.body)
+    onProxyRes(proxyRes /*, req, res*/) {
       proxyRes.headers['Access-Control-Allow-Origin'] = '*'
     },
     target: 'https://api-v3.igdb.com',
     ws: true,
   }),
 )
+app.use(bodyParser.json())
 
 const port = 3000
 
