@@ -20,7 +20,7 @@ app.use(
 
 // Add proxy to IGDB API
 app.use(
-  '/',
+  /\/((?!git).)*/,
   ...[isDev() ? useAuth : undefined, useIGDBProxy()].filter(i => Boolean(i)),
 )
 
