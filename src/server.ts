@@ -7,6 +7,7 @@ import bodyParser from 'body-parser'
 
 import { useAuth } from './middleware/auth'
 import { useIGDBProxy, useSteamProxy } from './middleware/proxy'
+import { useWebhook } from './middleware/webhook'
 import { isDev } from './utils'
 
 const app = express()
@@ -25,8 +26,9 @@ app.use(
 
 app.use(bodyParser.json())
 
-const port = 3000
+app.post('/git', useWebhook)
 
+const port = 3000
 app.listen(port, () => {
   console.log(
     isDev()
