@@ -12,6 +12,9 @@ const injectApiKey = (path: string, query: string) => {
   }
 }
 
+/**
+ * Injects the Steam web API key and rewrites paths based on the replacement map
+ */
 export const useSteamProxy = () =>
   createProxyMiddleware({
     changeOrigin: true,
@@ -27,12 +30,18 @@ export const useSteamProxy = () =>
     pathRewrite: (path /*, req*/) => {
       let newPath = ''
 
-      if (/steam\/getOwnedGames/.test(path)) {
-        newPath = path.replace(
-          /steam\/getOwnedGames/,
-          'IPlayerService/GetOwnedGames/v0001',
-        )
+      const replacementMap = {
+        '/steam/getAllGames': '/ISteamApps/GetAppList/v0002',
+        '/steam/getOwnedGames': '/IPlayerService/GetOwnedGames/v0001',
       }
+
+      Object.keys(replacementMap).some(
+        (testString: keyof typeof replacementMap) => {
+          if (new RegExp(testString).test(path)) {
+            newPath = path.replace(testString, replacementMap[testString])
+          }
+        },
+      )
 
       if (newPath !== path) {
         console.log(`[HPM] Replaced ${path} -> ${newPath}`)
@@ -41,12 +50,16 @@ export const useSteamProxy = () =>
           `key=${process.env.STEAM_API_KEY}&format=json`,
         )
       }
+
       return path
     },
     target: 'http://api.steampowered.com',
     ws: true,
   })
 
+/**
+ * Transparently adds the user-key and allows CORS requests
+ */
 export const useIGDBProxy = () =>
   createProxyMiddleware({
     changeOrigin: true,

@@ -11,8 +11,18 @@ import { isDev } from './utils'
 
 const app = express()
 
-app.use('/steam', useAuth, useSteamProxy)
-app.use('/', useAuth, useIGDBProxy)
+// Add proxy to Steam API
+app.use(
+  '/steam',
+  ...[isDev() ? useAuth : undefined, useSteamProxy()].filter(i => Boolean(i)),
+)
+
+// Add proxy to IGDB API
+app.use(
+  '/',
+  ...[isDev() ? useAuth : undefined, useIGDBProxy()].filter(i => Boolean(i)),
+)
+
 app.use(bodyParser.json())
 
 const port = 3000
