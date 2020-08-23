@@ -18,7 +18,7 @@ export const useWebhook: RequestHandler = (req, res) => {
       'git fetch origin master',
       'git reset --hard origin/master',
       'git pull origin master --force',
-      'npm install',
+      'pnpm install',
       // Extra build commands here
       'refresh', // fixes glitch ui
     ]
