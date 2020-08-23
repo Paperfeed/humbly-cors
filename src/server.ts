@@ -26,7 +26,7 @@ app.use(
 
 app.use(bodyParser.json())
 
-// Add Git Webhook
+// Add Git Webhook to automatically pull newest changes to Glitch
 app.post('/git', useWebhook)
 
 const port = 3000
