@@ -13,6 +13,12 @@ import { isDev } from './utils'
 
 const app = express()
 
+// Keep app awake
+app.get('/heartbeat', (req, res) => {
+  console.log(Date.now() + ' Heart is beating')
+  res.sendStatus(200)
+})
+
 // Add proxy to Steam API
 app.use(
   '/steam',
@@ -29,11 +35,6 @@ app.use(bodyParser.json())
 
 // Add Git Webhook to automatically pull newest changes to Glitch
 app.post('/git', useWebhook)
-
-app.get('/heartbeat', (req, res) => {
-  console.log(Date.now() + ' Heart is beating')
-  res.sendStatus(200)
-})
 
 setInterval(() => {
   http.get(`http://${process.env.PROJECT_DOMAIN}.glitch.me/`)
