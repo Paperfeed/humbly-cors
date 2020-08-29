@@ -1,5 +1,6 @@
 import dotenv from 'dotenv'
 import express from 'express'
+import http from 'http'
 
 dotenv.config()
 
@@ -28,6 +29,15 @@ app.use(bodyParser.json())
 
 // Add Git Webhook to automatically pull newest changes to Glitch
 app.post('/git', useWebhook)
+
+app.get('/heartbeat', (req, res) => {
+  console.log(Date.now() + ' Heart is beating')
+  res.sendStatus(200)
+})
+
+setInterval(() => {
+  http.get(`http://${process.env.PROJECT_DOMAIN}.glitch.me/`)
+}, 180000)
 
 const port = 3000
 app.listen(port, () => {
